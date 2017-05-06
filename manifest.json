@@ -1,0 +1,14 @@
+{
+  "Name": "Custom Farm Types",
+  "Author": "spacechase0",
+  "Version": {
+    "MajorVersion": 1,
+    "MinorVersion": 0,
+    "PatchVersion": 0,
+    "Build": ""
+  },
+  "Description": "Allow custom farm types.",
+  "UniqueID": "spacechase0.CustomFarmTypes",
+  "PerSaveConfigs": false,
+  "EntryDll": "CustomFarmTypes.dll"
+}
