@@ -9,6 +9,9 @@ using Microsoft.Xna.Framework.Input;
 using SFarmer = StardewValley.Farmer;
 using System.Collections.Generic;
 using StardewValley.Menus;
+using StardewValley.Locations;
+using StardewValley.Objects;
+using SObject = StardewValley.Object;
 
 namespace CustomFarmTypes
 {
@@ -52,12 +55,25 @@ namespace CustomFarmTypes
             b.OreSpawnChanceMultiplier = mine.OreSpawnChanceMultiplier;
             b.SpawnMonsters = fight.SpawnMonsters;
 
+            FarmType.FarmhouseContents c = new FarmType.FarmhouseContents();
+            c.WallpaperID = 3;
+            c.FlooringID = 40;
+            c.Furniture.Add(new FarmType.FarmhouseContents.FurniturePiece(1130, 1, 6, 0, 1368));
+            c.Furniture.Add(new FarmType.FarmhouseContents.FurniturePiece(91, 1, 5, 0));
+            c.TV.FurnitureID = 1468;
+            c.TV.Position = new Vector2( 5, 4 );
+            c.Giftbox.Position = new Vector2(4, 10);
+            c.Giftbox.Contents.Add(new FarmType.FarmhouseContents.GiftboxData.Entry(94, 5));
+
             FarmType o = new FarmType();
             o.Name = "Everything";
             o.Description = "A farm incorporating features from every type, located in the forest.";
             o.ID = "spacechase0.FarmType.Everything";
             o.BehaviorPreset = 0;
             o.Behavior = b;
+            o.FarmhousePreset = 0;
+            o.Farmhouse = c;
+
             Helper.WriteJsonFile(Path.Combine(Helper.DirectoryPath, "everything.json"), o);
             //*/
 
@@ -95,8 +111,7 @@ namespace CustomFarmTypes
                 if (Game1.year == 1 && Game1.currentSeason == "spring" && Game1.dayOfMonth == 0)
                 {
                     Log.debug("First day? from load");
-                    for (int index = 0; index < type.Behavior.NewSaveOreGenRuns; ++index)
-                        newFarm.doOreSpawns();
+                    doFirstDayStuff(newFarm, type);
                 }
                 else CustomFarm.swapFarms(loc as Farm, newFarm);
                 Game1.locations.Remove(loc);
@@ -145,8 +160,7 @@ namespace CustomFarmTypes
                 if ( Game1.year == 1 && Game1.currentSeason == "spring" && Game1.dayOfMonth == 1 )
                 {
                     Log.debug("First day? from save");
-                    for (int index = 0; index < type.Behavior.NewSaveOreGenRuns; ++index)
-                        newFarm.doOreSpawns();
+                    doFirstDayStuff(newFarm, type);
                 }
                 else CustomFarm.swapFarms(loc as Farm, newFarm);
                 Game1.locations.Remove(loc);
@@ -198,6 +212,51 @@ namespace CustomFarmTypes
                 type.Folder = Path.Combine("FarmTypes", Path.GetFileName(choice));
                 FarmType.register(type);
                 Log.info("\tFarm type: " + type.Name + " (" + type.ID + ")");
+            }
+        }
+
+        private void doFirstDayStuff( CustomFarm newFarm, FarmType type )
+        {
+            for (int index = 0; index < type.Behavior.NewSaveOreGenRuns; ++index)
+                newFarm.doOreSpawns();
+
+            var house = (FarmHouse)Game1.getLocationFromName("FarmHouse");
+            house.furniture.Clear();
+            house.objects.Clear();
+            if (type.Farmhouse.WallpaperID != -1)
+            {
+                Log.debug("Wallpaper: " + type.Farmhouse.WallpaperID);
+                house.setWallpaper(type.Farmhouse.WallpaperID, -1, true);
+            }
+            if (type.Farmhouse.FlooringID != -1)
+            {
+                Log.debug("Flooring: " + type.Farmhouse.FlooringID);
+                house.setFloor(type.Farmhouse.FlooringID, -1, true);
+            }
+            foreach (var fp in type.Farmhouse.Furniture)
+            {
+                var furn = new Furniture(fp.FurnitureID, fp.Position, fp.Rotations);
+                if (fp.HeldFurnitureID != -1)
+                    furn.heldObject = new Furniture(fp.HeldFurnitureID, fp.Position);
+                Log.debug("Furniture: " + fp.FurnitureID + "(" + fp.HeldFurnitureID + ") @ " + fp.Position + " " + fp.Rotations );
+                house.furniture.Add(furn);
+            }
+            if (type.Farmhouse.TV.FurnitureID != -1)
+            {
+                Log.debug("TV: " + type.Farmhouse.TV.FurnitureID + " " + type.Farmhouse.TV.Position);
+                house.furniture.Add(new TV(type.Farmhouse.TV.FurnitureID, type.Farmhouse.TV.Position));
+            }
+            if (type.Farmhouse.Giftbox.Contents.Count > 0)
+            {
+                List<Item> items = new List<Item>();
+                foreach (var e in type.Farmhouse.Giftbox.Contents)
+                {
+                    Log.debug("Giftbox item: " + e.ObjectID + " x " + e.Amount);
+                    items.Add(new SObject(e.ObjectID, e.Amount, false, -1, 0));
+                }
+                Log.debug("Giftbox position: " + type.Farmhouse.Giftbox.Position);
+                var giftbox = new Chest(0, items, type.Farmhouse.Giftbox.Position, items.Count == 1);
+                house.objects.Add(type.Farmhouse.Giftbox.Position, giftbox);
             }
         }
     }

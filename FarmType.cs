@@ -217,6 +217,55 @@ namespace CustomFarmTypes
                 return areas.Last();
             }
         }
+        
+        public class FarmhouseContents
+        {
+            public int WallpaperID { get; set; } = -1;
+            public int FlooringID { get; set; } = -1;
+            public class FurniturePiece
+            {
+                public int FurnitureID { get; set; }
+                public Vector2 Position { get; set; }
+                public int Rotations { get; set; }
+                public int HeldFurnitureID { get; set; } = -1;
+
+                public FurniturePiece() { }
+                public FurniturePiece(int id, int x, int y, int rot = 0, int held = -1)
+                {
+                    FurnitureID = id;
+                    Position = new Vector2(x, y);
+                    Rotations = 0;
+                    if (held != -1)
+                        HeldFurnitureID = held;
+                }
+            }
+            public List<FurniturePiece> Furniture { get; set; } = new List<FurniturePiece>();
+            public class TVData
+            {
+                public int FurnitureID { get; set; } = 1466;
+                public Vector2 Position { get; set; } = new Vector2(1, 4);
+            }
+            public TVData TV { get; set; } = new TVData();
+            public class GiftboxData
+            {
+                public class Entry
+                {
+                    public int ObjectID;
+                    public int Amount;
+
+                    public Entry() { }
+                    public Entry(int id, int amt)
+                    {
+                        ObjectID = id;
+                        Amount = amt;
+                    }
+                }
+
+                public Vector2 Position { get; set; } = new Vector2(3, 7);
+                public List<Entry> Contents { get; set; } = new List<Entry>(new Entry[] { new Entry(472, 15) });
+            }
+            public GiftboxData Giftbox { get; set; } = new GiftboxData();
+        }
 
         [JsonIgnore]
         public string Folder { get; set; }
@@ -248,8 +297,19 @@ namespace CustomFarmTypes
         }
         private FarmBehavior behavior_;
 
-        // TODO: House furniture and stuff
-        
+        public int FarmhousePreset { get; set; } = Farm.default_layout;
+        public FarmhouseContents Farmhouse
+        {
+            get
+            {
+                if (farmhouse_ == null)
+                    farmhouse_ = getFarmhouseFromPreset(FarmhousePreset);
+                return farmhouse_;
+            }
+            set { farmhouse_ = value; }
+        }
+        private FarmhouseContents farmhouse_;
+
         public virtual Map loadMap()
         {
             return Mod.instance.Helper.Content.Load<Map>( Folder + "/map.xnb", ContentSource.ModFolder);
@@ -266,6 +326,7 @@ namespace CustomFarmTypes
             f.Name = Farm.getMapNameFromTypeInt(vanillaId);
             f.ID = "StardewValley." + f.Name;
             f.BehaviorPreset = vanillaId;
+            f.FarmhousePreset = vanillaId;
 
             return f;
         }
@@ -387,6 +448,92 @@ namespace CustomFarmTypes
             }
 
             return b;
+        }
+        
+        public static FarmhouseContents getFarmhouseFromPreset(int vanillaId)
+        {
+            FarmhouseContents c = new FarmhouseContents();
+            switch (vanillaId)
+            {
+                case Farm.default_layout:
+                    {
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1120, 5, 4, 0, 1364));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1376, 1, 10));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(0, 4, 10));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1614, 3, 1));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1618, 6, 8));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1602, 5, 1));
+                    }
+                    break;
+                case Farm.riverlands_layout:
+                    {
+                        c.WallpaperID = 11;
+                        c.FlooringID = 1;
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1122, 1, 6, 0, 1367));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(3, 1, 5));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1673, 1, 1));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1673, 3, 5));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1676, 5, 1));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1737, 6, 8));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1742, 5, 5));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1675, 10, 1));
+                        c.TV.FurnitureID = 1680;
+                        c.TV.Position = new Vector2(5, 4);
+                        c.Giftbox.Position = new Vector2(4, 7);
+                    }
+                    break;
+                case Farm.forest_layout:
+                    {
+                        c.WallpaperID = 92;
+                        c.FlooringID = 34;
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1134, 1, 7, 0, 1748));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(3, 1, 6));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1296, 1, 4));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1682, 3, 1));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1777, 6, 5));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1745, 6, 1));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1747, 5, 4));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1296, 10, 4));
+                        c.TV.FurnitureID = 1680;
+                        c.TV.Position = new Vector2(6, 4);
+                        c.Giftbox.Position = new Vector2(4, 7);
+                    }
+                    break;
+                case Farm.mountains_layout:
+                    {
+                        c.WallpaperID = 12;
+                        c.FlooringID = 18;
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1218, 1, 6, 0, 1368));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1755, 1, 5));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1755, 3, 6, 1));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1751, 5, 10));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1749, 3, 1));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1753, 5, 1));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1742, 5, 5));
+                        c.TV.FurnitureID = 1680;
+                        c.TV.Position = new Vector2(5, 4);
+                        c.Giftbox.Position = new Vector2(2, 9);
+                    }
+                    break;
+                case Farm.combat_layout:
+                    {
+                        c.WallpaperID = 12;
+                        c.FlooringID = 18;
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1628, 1, 5));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1393, 1, 6, 0, 1396));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1678, 10, 1));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1812, 3, 1));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1630, 1, 1));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1811, 6, 1));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1389, 10, 4));
+                        c.TV.FurnitureID = 1680;
+                        c.TV.Position = new Vector2(1, 4);
+                        c.Giftbox.Position = new Vector2(4, 7);
+                    }
+                    break;
+            }
+
+            return c;
         }
 
         private static Dictionary<string, FarmType> types = new Dictionary<string, FarmType>();

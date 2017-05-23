@@ -358,5 +358,41 @@
       }
     ],
     "SpawnMonsters": true
+  },
+  "FarmhousePreset": 0,
+  "Farmhouse": {
+    "WallpaperID": 3,
+    "FlooringID": 39,
+    "Furniture": [
+      {
+        "FurnitureID": 1130,
+        "Position": "1, 6",
+        "Rotations": 0,
+        "HeldFurnitureID": 1368
+      },
+      {
+        "FurnitureID": 91,
+        "Position": "1, 5",
+        "Rotations": 0,
+        "HeldFurnitureID": -1
+      }
+    ],
+    "TV": {
+      "FurnitureID": 1468,
+      "Position": "5, 4"
+    },
+    "Giftbox": {
+      "Position": "3, 10",
+      "Contents": [
+        {
+          "ObjectID": 472,
+          "Amount": 15
+        },
+        {
+          "ObjectID": 94,
+          "Amount": 5
+        }
+      ]
+    }
   }
 }
