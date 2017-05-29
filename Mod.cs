@@ -116,6 +116,8 @@ namespace CustomFarmTypes
                 else CustomFarm.swapFarms(loc as Farm, newFarm);
                 Game1.locations.Remove(loc);
                 Game1.locations.Add(newFarm);
+
+                Game1.setGraphicsForSeason();
             }
         }
 
