@@ -95,6 +95,9 @@ namespace CustomFarmTypes
                         if (entry.OnlyTryIfNoneSelectedYet && ret != null)
                             continue;
 
+                        if (Game1.player != null && Game1.player.miningLevel < entry.MiningLevelRequirement)
+                            continue;
+
                         if (Game1.random.NextDouble() <= entry.Chance)
                             ret = entry;
                     }
