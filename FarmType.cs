@@ -520,7 +520,7 @@ namespace CustomFarmTypes
                         c.WallpaperID = 12;
                         c.FlooringID = 18;
                         c.Furniture.Add(new FarmhouseContents.FurniturePiece(1628, 1, 5));
-                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1393, 1, 6, 0, 1396));
+                        c.Furniture.Add(new FarmhouseContents.FurniturePiece(1393, 1, 6, 0, 1369));
                         c.Furniture.Add(new FarmhouseContents.FurniturePiece(1678, 10, 1));
                         c.Furniture.Add(new FarmhouseContents.FurniturePiece(1812, 3, 1));
                         c.Furniture.Add(new FarmhouseContents.FurniturePiece(1630, 1, 1));
