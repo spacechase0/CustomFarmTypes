@@ -31,6 +31,14 @@ namespace CustomFarmTypes
             SaveEvents.BeforeSave += beforeSave;
             SaveEvents.AfterSave += afterSave;
             GameEvents.UpdateTick += onUpdate;
+            try
+            {
+                TypeFixes.fix();
+            }
+            catch ( Exception e )
+            {
+                Log.error("EXCEPTION FIXING FARM TYPES: " + e);
+            }
 
             /*
             var fish = FarmType.getFarmBehaviorFromPreset(Farm.riverlands_layout);
