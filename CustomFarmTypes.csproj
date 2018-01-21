@@ -99,6 +99,6 @@
     <ItemGroup>
       <ResourceFiles Include="$(ProjectDir)res\**\*.*" />
     </ItemGroup>
-    <Copy SourceFiles="@(ResourceFiles)" DestinationFiles="@(ResourceFiles->'$(GamePath)\Mods\CustomFarmTypes\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(ResourceFiles)" DestinationFiles="@(ResourceFiles->'$(TargetDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 </Project>
