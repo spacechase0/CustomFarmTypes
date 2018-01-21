@@ -3,10 +3,6 @@ using System.IO;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using SFarmer = StardewValley.Farmer;
 using System.Collections.Generic;
 using StardewValley.Menus;
 using StardewValley.Locations;
@@ -27,6 +23,8 @@ namespace CustomFarmTypes
             instance = this;
             
             SaveEvents.AfterLoad += afterLoad;
+            SaveEvents.BeforeCreate += beforeSave;
+            SaveEvents.AfterCreate += afterSave;
             SaveEvents.BeforeSave += beforeSave;
             SaveEvents.AfterSave += afterSave;
             GameEvents.UpdateTick += onUpdate;
