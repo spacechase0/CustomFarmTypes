@@ -24,7 +24,6 @@ namespace CustomFarmTypes
 
         public override void Entry(IModHelper helper)
         {
-            base.Entry(helper);
             instance = this;
             
             SaveEvents.AfterLoad += afterLoad;
@@ -188,10 +187,10 @@ namespace CustomFarmTypes
                     Log.debug("Found vanilla new game window, replacing with our own.");
 
                     var oldMenu = (CharacterCustomization)TitleMenu.subMenu;
-                    var shirts = Helper.Reflection.GetPrivateValue<List<int>>(oldMenu, "shirtOptions");
-                    var hairs = Helper.Reflection.GetPrivateValue<List<int>>(oldMenu, "hairStyleOptions");
-                    var accessories = Helper.Reflection.GetPrivateValue<List<int>>(oldMenu, "accessoryOptions");
-                    var wizard = Helper.Reflection.GetPrivateValue<bool>(oldMenu, "wizardSource");
+                    var shirts = Helper.Reflection.GetField<List<int>>(oldMenu, "shirtOptions").GetValue();
+                    var hairs = Helper.Reflection.GetField<List<int>>(oldMenu, "hairStyleOptions").GetValue();
+                    var accessories = Helper.Reflection.GetField<List<int>>(oldMenu, "accessoryOptions").GetValue();
+                    var wizard = Helper.Reflection.GetField<bool>(oldMenu, "wizardSource").GetValue();
                     var newMenu = new NewCharacterCustomizeMenu(shirts, hairs, accessories, wizard);
 
                     TitleMenu.subMenu = newMenu;

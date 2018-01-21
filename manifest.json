@@ -5,6 +5,6 @@
   "Description": "Allow custom farm types.",
   "UniqueID": "spacechase0.CustomFarmTypes",
   "EntryDll": "CustomFarmTypes.dll",
-  "MinimumApiVersion": "2.0",
+  "MinimumApiVersion": "2.3",
   "UpdateKeys": [ "chucklefish:4705" ]
 }
