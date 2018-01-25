@@ -93,9 +93,9 @@
     <Content Include="res\FarmTypes\Wilderness_NoDebris\icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Harmony\Harmony\Harmony.csproj">
-      <Project>{69aee16a-b6e7-4642-8081-3928b32455df}</Project>
-      <Name>Harmony</Name>
+    <ProjectReference Include="..\SpaceCore\SpaceCore.csproj">
+      <Project>{ba657cb4-93ed-4c3a-a66e-86954beb4ce6}</Project>
+      <Name>SpaceCore</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

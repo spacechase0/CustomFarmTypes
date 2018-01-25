@@ -12,8 +12,6 @@ using StardewValley.Menus;
 using StardewValley.Locations;
 using StardewValley.Objects;
 using SObject = StardewValley.Object;
-using Harmony;
-using System.Reflection;
 
 namespace CustomFarmTypes
 {
@@ -35,8 +33,7 @@ namespace CustomFarmTypes
             GameEvents.UpdateTick += onUpdate;
             try
             {
-                var harmony = HarmonyInstance.Create("spacechase0.CustomFarmTypes");
-                harmony.PatchAll(Assembly.GetExecutingAssembly());
+                TypeFixes.fix();
             }
             catch ( Exception e )
             {
