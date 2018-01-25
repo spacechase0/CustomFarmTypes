@@ -1251,6 +1251,18 @@ namespace CustomFarmTypes
 
         public override void draw(SpriteBatch b)
         {
+            /////////////////////////////////////////////////////////
+            var keyState = Keyboard.GetState();
+            if (keyState.IsKeyDown(Keys.Up))
+                scroll += 5;
+            if (keyState.IsKeyDown(Keys.Down))
+                scroll -= 5;
+
+            if (scroll > 0) scroll = 0;
+
+            int cap = (farmTypeButtons[0].bounds.Height + Game1.pixelZoom * 3) * farmTypeButtons.Count - scrollRect.Height;
+            if (scroll <= -cap) scroll = -cap;
+            /////////////////////////////////////////////////////////
             Game1.drawDialogueBox(this.xPositionOnScreen, this.yPositionOnScreen, this.width, this.height, false, true, (string)null, false);
             b.Draw(Game1.daybg, new Vector2((float)(this.xPositionOnScreen + Game1.tileSize + Game1.tileSize * 2 / 3 - 2), (float)(this.yPositionOnScreen + IClickableMenu.borderWidth + IClickableMenu.spaceToClearTopBorder - Game1.tileSize / 4)), Color.White);
             Game1.player.FarmerRenderer.draw(b, Game1.player.FarmerSprite.CurrentAnimationFrame, Game1.player.FarmerSprite.CurrentFrame, Game1.player.FarmerSprite.SourceRect, new Vector2((float)(this.xPositionOnScreen - 2 + Game1.tileSize * 2 / 3 + Game1.tileSize * 2 - Game1.tileSize / 2), (float)(this.yPositionOnScreen + IClickableMenu.borderWidth - Game1.tileSize / 4 + IClickableMenu.spaceToClearTopBorder + Game1.tileSize / 2)), Vector2.Zero, 0.8f, Color.White, 0.0f, 1f, Game1.player);
