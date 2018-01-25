@@ -1,14 +1,10 @@
 {
   "Name": "Custom Farm Types",
   "Author": "spacechase0",
-  "Version": {
-    "MajorVersion": 1,
-    "MinorVersion": 1,
-    "PatchVersion": 2,
-    "Build": ""
-  },
+  "Version": "1.1.3",
   "Description": "Allow custom farm types.",
   "UniqueID": "spacechase0.CustomFarmTypes",
-  "PerSaveConfigs": false,
-  "EntryDll": "CustomFarmTypes.dll"
+  "EntryDll": "CustomFarmTypes.dll",
+  "MinimumApiVersion": "2.4",
+  "UpdateKeys": [ "chucklefish:4705" ]
 }

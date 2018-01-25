@@ -131,7 +131,7 @@ namespace CustomFarmTypes
         public override SObject getFish(float millisecondsAfterNibble, int bait, int waterDepth, SFarmer who, double baitPotency, string locationName = null)
         {
             var fishingRod = who.CurrentTool as FishingRod;
-            var bobber = Mod.instance.Helper.Reflection.GetPrivateValue<Vector2>(fishingRod, "bobber");
+            var bobber = Mod.instance.Helper.Reflection.GetField<Vector2>(fishingRod, "bobber").GetValue();
             Point bobberTile = new Point((int)bobber.X / Game1.tileSize, (int)bobber.Y / Game1.tileSize);
 
             int poolFrom = -1;
