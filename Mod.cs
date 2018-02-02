@@ -113,7 +113,7 @@ namespace CustomFarmTypes
                 }
 
                 var newFarm = new CustomFarm(type, loc.name);
-                if (Game1.year == 1 && Game1.currentSeason == "spring" && Game1.dayOfMonth == 0)
+                if (Game1.year == 1 && Game1.currentSeason == "spring" && Game1.dayOfMonth == 1)
                 {
                     Log.debug("First day? from load");
                     doFirstDayStuff(newFarm, type);
