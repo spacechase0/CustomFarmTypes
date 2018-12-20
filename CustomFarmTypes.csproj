@@ -52,29 +52,71 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="manifest.json" />
-    <None Include="res\FarmTypes\Everything\map.xnb" />
-    <None Include="res\FarmTypes\Everything\type.json" />
-    <None Include="res\FarmTypes\Everything_NoDebris\map.xnb" />
-    <None Include="res\FarmTypes\Everything_NoDebris\type.json" />
-    <None Include="res\FarmTypes\Forest_NoDebris\map.xnb" />
-    <None Include="res\FarmTypes\Mountains_NoDebris\map.xnb" />
-    <None Include="res\FarmTypes\Riverlands_NoDebris\map.xnb" />
-    <None Include="res\FarmTypes\Standard_NoDebris\map.xnb" />
-    <None Include="res\FarmTypes\Wilderness_NoDebris\map.xnb" />
-    <None Include="res\FarmTypes\Wilderness_NoDebris\type.json" />
-    <None Include="res\FarmTypes\Mountains_NoDebris\type.json" />
-    <None Include="res\FarmTypes\Riverlands_NoDebris\type.json" />
-    <None Include="res\FarmTypes\Standard_NoDebris\type.json" />
-    <None Include="res\FarmTypes\Forest_NoDebris\type.json" />
+    <None Include="res\FarmTypes\Everything\map.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="res\FarmTypes\Everything\type.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="res\FarmTypes\Everything_NoDebris\map.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="res\FarmTypes\Everything_NoDebris\type.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="res\FarmTypes\Forest_NoDebris\map.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="res\FarmTypes\Mountains_NoDebris\map.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="res\FarmTypes\Riverlands_NoDebris\map.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="res\FarmTypes\Standard_NoDebris\map.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="res\FarmTypes\Wilderness_NoDebris\map.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="res\FarmTypes\Wilderness_NoDebris\type.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="res\FarmTypes\Mountains_NoDebris\type.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="res\FarmTypes\Riverlands_NoDebris\type.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="res\FarmTypes\Standard_NoDebris\type.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="res\FarmTypes\Forest_NoDebris\type.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="res\FarmTypes\Everything\icon.png" />
-    <Content Include="res\FarmTypes\Everything_NoDebris\icon.png" />
-    <Content Include="res\FarmTypes\Forest_NoDebris\icon.png" />
-    <Content Include="res\FarmTypes\Mountains_NoDebris\icon.png" />
-    <Content Include="res\FarmTypes\Riverlands_NoDebris\icon.png" />
-    <Content Include="res\FarmTypes\Standard_NoDebris\icon.png" />
-    <Content Include="res\FarmTypes\Wilderness_NoDebris\icon.png" />
+    <Content Include="res\FarmTypes\Everything\icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\FarmTypes\Everything_NoDebris\icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\FarmTypes\Forest_NoDebris\icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\FarmTypes\Mountains_NoDebris\icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\FarmTypes\Riverlands_NoDebris\icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\FarmTypes\Standard_NoDebris\icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\FarmTypes\Wilderness_NoDebris\icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SpaceCore\SpaceCore.csproj">
@@ -88,10 +130,4 @@
     <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="2.0.2" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="DeployFarmTypes" BeforeTargets="AfterBuild">
-    <ItemGroup>
-      <ResourceFiles Include="$(ProjectDir)res\**\*.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(ResourceFiles)" DestinationFiles="@(ResourceFiles->'$(TargetDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
-  </Target>
 </Project>
