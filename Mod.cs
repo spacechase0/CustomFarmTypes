@@ -90,7 +90,7 @@ namespace CustomFarmTypes
             if (!(Game1.year == 1 && Game1.currentSeason == "spring" && Game1.dayOfMonth == 0))
             {
                 Log.debug("Loading save data... " + Game1.year + " " + Game1.currentSeason + " " + Game1.dayOfMonth);
-                Data = Helper.ReadJsonFile<SaveData>(Path.Combine(Constants.CurrentSavePath, "custom-farm-type.json"));
+                Data = Helper.Data.ReadSaveData<SaveData>("custom-farm-types");
                 if (Data == null)
                 {
                     Data = new SaveData();
@@ -143,12 +143,13 @@ namespace CustomFarmTypes
                     Game1.locations.Add(newFarm);
                 }
             }
+
+            Helper.Data.WriteSaveData("custom-farm-types", Data);
         }
 
         private void afterSave(object sender, EventArgs args)
         {
-            Log.info("Saving, putting custom farms back...");
-            Helper.WriteJsonFile(Path.Combine(Constants.CurrentSavePath, "custom-farm-type.json"), Data);
+            Log.info("Saved, putting custom farms back...");
             foreach (var entry in Data.FarmTypes)
             {
                 GameLocation loc = Game1.getLocationFromName(entry.Key);
