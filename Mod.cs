@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using StardewModdingAPI;
-using StardewModdingAPI.Events;
 using StardewValley;
 using System.Collections.Generic;
 using StardewValley.Menus;
@@ -22,12 +21,12 @@ namespace CustomFarmTypes
         {
             instance = this;
             
-            SaveEvents.AfterLoad += afterLoad;
-            SaveEvents.BeforeCreate += beforeSave;
-            SaveEvents.AfterCreate += afterSave;
-            SaveEvents.BeforeSave += beforeSave;
-            SaveEvents.AfterSave += afterSave;
-            GameEvents.UpdateTick += onUpdate;
+            helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
+            helper.Events.GameLoop.SaveCreating += OnSaving;
+            helper.Events.GameLoop.SaveCreated += OnSaved;
+            helper.Events.GameLoop.Saving += OnSaving;
+            helper.Events.GameLoop.Saved += OnSaved;
+            helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
             try
             {
                 TypeFixes.fix();
@@ -85,7 +84,10 @@ namespace CustomFarmTypes
             compileChoices();
         }
 
-        private void afterLoad(object sender, EventArgs args)
+        /// <summary>Raised after the player loads a save slot.</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void OnSaveLoaded(object sender, EventArgs e)
         {
             if (!(Game1.year == 1 && Game1.currentSeason == "spring" && Game1.dayOfMonth == 0))
             {
@@ -126,7 +128,10 @@ namespace CustomFarmTypes
             }
         }
 
-        private void beforeSave(object sender, EventArgs args)
+        /// <summary>Raised before the game creates a new save file or saves.</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void OnSaving(object sender, EventArgs e)
         {
             Log.info("Before save, use vanilla farms...");
 
@@ -147,7 +152,10 @@ namespace CustomFarmTypes
             Helper.Data.WriteSaveData("custom-farm-types", Data);
         }
 
-        private void afterSave(object sender, EventArgs args)
+        /// <summary>Raised after the game finishes creating the save file or saving.</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void OnSaved(object sender, EventArgs e)
         {
             Log.info("Saved, putting custom farms back...");
             foreach (var entry in Data.FarmTypes)
@@ -176,50 +184,49 @@ namespace CustomFarmTypes
             }
         }
 
-        private IClickableMenu prevMenu = null;
-        private void onUpdate(object sender, EventArgs args)
+        /// <summary>Raised after the game state is updated (≈60 times per second).</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void OnUpdateTicked(object sender, EventArgs e)
         {
-            if (Game1.activeClickableMenu is TitleMenu)
+            if (Game1.activeClickableMenu is TitleMenu && TitleMenu.subMenu is CharacterCustomization)
             {
-                if (TitleMenu.subMenu is CharacterCustomization)
-                {
-                    Log.debug("Found vanilla new game window, replacing with our own.");
+                Log.debug("Found vanilla new game window, replacing with our own.");
 
-                    var oldMenu = (CharacterCustomization)TitleMenu.subMenu;
-                    var shirts = Helper.Reflection.GetField<List<int>>(oldMenu, "shirtOptions").GetValue();
-                    var hairs = Helper.Reflection.GetField<List<int>>(oldMenu, "hairStyleOptions").GetValue();
-                    var accessories = Helper.Reflection.GetField<List<int>>(oldMenu, "accessoryOptions").GetValue();
-                    var wizard = Helper.Reflection.GetField<bool>(oldMenu, "wizardSource").GetValue();
-                    var newMenu = new NewCharacterCustomizeMenu(shirts, hairs, accessories, wizard);
+                var oldMenu = (CharacterCustomization)TitleMenu.subMenu;
+                var shirts = Helper.Reflection.GetField<List<int>>(oldMenu, "shirtOptions").GetValue();
+                var hairs = Helper.Reflection.GetField<List<int>>(oldMenu, "hairStyleOptions").GetValue();
+                var accessories = Helper.Reflection.GetField<List<int>>(oldMenu, "accessoryOptions").GetValue();
+                var wizard = Helper.Reflection.GetField<bool>(oldMenu, "wizardSource").GetValue();
+                var newMenu = new NewCharacterCustomizeMenu(shirts, hairs, accessories, wizard);
 
-                    TitleMenu.subMenu = newMenu;
-                }
+                TitleMenu.subMenu = newMenu;
             }
-            prevMenu = Game1.activeClickableMenu;
         }
 
         private void compileChoices()
         {
             Log.info("Creating list of custom farm types...");
-            var choices = Directory.GetDirectories(Path.Combine(Helper.DirectoryPath, "FarmTypes"));
-            foreach (var choice in choices)
+            var farmTypeDirs = Directory.GetDirectories(Path.Combine(Helper.DirectoryPath, "FarmTypes"));
+            foreach (var folderPath in farmTypeDirs)
             {
-                if (!File.Exists(Path.Combine(choice, "type.json")) || !File.Exists(Path.Combine(choice, "map.xnb")) || !File.Exists(Path.Combine(choice, "icon.png")) )
+                IContentPack contentPack = this.Helper.ContentPacks.CreateFake(folderPath);
+                if (!File.Exists(Path.Combine(folderPath, "type.json")) || !File.Exists(Path.Combine(folderPath, "map.xnb")) || !File.Exists(Path.Combine(folderPath, "icon.png")) )
                 {
-                    Log.error("A required file is missing for custom farm type \"" + choice + "\".");
+                    Log.error($"A required file is missing for custom farm type \"{folderPath}\".");
                     continue;
                 }
 
-                FarmType type = Helper.ReadJsonFile<FarmType>(Path.Combine(choice, "type.json"));
+                FarmType type = contentPack.ReadJsonFile<FarmType>("type.json");
                 if ( type == null )
                 {
-                    Log.error("Problem reading type.json for custom farm type \"" + choice + "\".");
+                    Log.error($"Problem reading type.json for custom farm type \"{folderPath}\".");
                     continue;
                 }
 
-                type.Folder = Path.Combine("FarmTypes", Path.GetFileName(choice));
+                type.Folder = Path.Combine("FarmTypes", Path.GetFileName(folderPath));
                 FarmType.register(type);
-                Log.info("\tFarm type: " + type.Name + " (" + type.ID + ")");
+                Log.info($"\tFarm type: {type.Name} ({type.ID})");
             }
         }
 
