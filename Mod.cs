@@ -12,8 +12,6 @@ namespace CustomFarmTypes
 {
     public class Mod : StardewModdingAPI.Mod
     {
-        public const int MY_FARM_TYPE = 6;
-
         public static Mod instance;
         public static SaveData Data = new SaveData();
 
@@ -91,7 +89,7 @@ namespace CustomFarmTypes
         {
             if (!(Game1.year == 1 && Game1.currentSeason == "spring" && Game1.dayOfMonth == 0))
             {
-                Log.debug("Loading save data... " + Game1.year + " " + Game1.currentSeason + " " + Game1.dayOfMonth);
+                Log.debug($"Loading save data... {Game1.year} {Game1.currentSeason} {Game1.dayOfMonth}");
                 Data = Helper.Data.ReadSaveData<SaveData>("custom-farm-types");
                 if (Data == null)
                 {
@@ -106,7 +104,7 @@ namespace CustomFarmTypes
                 if ( loc.GetType() != typeof( Farm ) )
                     continue;
 
-                Log.info("Custom farm type " + entry.Value + " for " + entry.Key);
+                Log.info($"Custom farm type {entry.Value} for {entry.Key}");
                 FarmType type = FarmType.getType(entry.Value);
                 if (type == null)
                 {
@@ -114,7 +112,7 @@ namespace CustomFarmTypes
                     return;
                 }
 
-                var newFarm = new CustomFarm(type, loc.name);
+                var newFarm = new CustomFarm(type, loc.Name);
                 if (Game1.year == 1 && Game1.currentSeason == "spring" && Game1.dayOfMonth == 1)
                 {
                     Log.debug("First day? from load");
@@ -140,9 +138,9 @@ namespace CustomFarmTypes
                 GameLocation loc = Game1.getLocationFromName(entry.Key);
                 if (loc.GetType() == typeof(CustomFarm))
                 {
-                    Log.debug("Putting vanilla farm over " + entry.Key + "=" + entry.Value);
+                    Log.debug($"Putting vanilla farm over {entry.Key}={entry.Value}");
                     var farm = loc as CustomFarm;
-                    Farm newFarm = new Farm(Helper.Content.Load<xTile.Map>("Maps\\Farm", ContentSource.GameContent), loc.name);
+                    Farm newFarm = new Farm("Maps\\Farm", loc.Name);
                     CustomFarm.swapFarms(farm, newFarm);
                     Game1.locations.Remove(farm);
                     Game1.locations.Add(newFarm);
@@ -252,7 +250,7 @@ namespace CustomFarmTypes
             {
                 var furn = new Furniture(fp.FurnitureID, fp.Position, fp.Rotations);
                 if (fp.HeldFurnitureID != -1)
-                    furn.heldObject = new Furniture(fp.HeldFurnitureID, fp.Position);
+                    furn.heldObject.Value = new Furniture(fp.HeldFurnitureID, fp.Position);
                 Log.debug("Furniture: " + fp.FurnitureID + "(" + fp.HeldFurnitureID + ") @ " + fp.Position + " " + fp.Rotations );
                 house.furniture.Add(furn);
             }
@@ -267,7 +265,7 @@ namespace CustomFarmTypes
                 foreach (var e in type.Farmhouse.Giftbox.Contents)
                 {
                     Log.debug("Giftbox item: " + e.ObjectID + " x " + e.Amount);
-                    items.Add(new SObject(e.ObjectID, e.Amount, false, -1, 0));
+                    items.Add(new SObject(e.ObjectID, e.Amount));
                 }
                 Log.debug("Giftbox position: " + type.Farmhouse.Giftbox.Position);
                 var giftbox = new Chest(0, items, type.Farmhouse.Giftbox.Position, items.Count == 1);
